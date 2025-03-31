@@ -44,11 +44,9 @@ CREATE TABLE BookGenre(
 
 DROP TABLE IF EXISTS Bookshop;
 CREATE TABLE Bookshop(
-    shopID      INTEGER     PRIMARY KEY
-                            AUTOINCREMENT,
-    name        TEXT        NOT NULL,
-    address     TEXT        UNIQUE
+    address     TEXT        PRIMARY KEY
                             NOT NULL,
+    name        TEXT        NOT NULL,
     shopTYPE    TEXT        CHECK (shopTYPE IN ('franchise', 'chain') OR shopTYPE IS NULL),
     manager     TEXT        NOT NULL
 );
@@ -57,19 +55,20 @@ DROP TABLE IF EXISTS Employee;
 CREATE TABLE Employee(
     employeeID  INTEGER     PRIMARY KEY
                             AUTOINCREMENT,
-    name        TEXT        NOT NULL,
-    shopID      INTEGER     NOT NULL,
-    FOREIGN KEY (shopID)    REFERENCES Bookshop(shopID)
+    name        TEXT        NOT NULL
 );
 
 DROP TABLE IF EXISTS Contract;
 CREATE TABLE Contract(
-    employeeID  INTEGER     PRIMARY KEY,
+    employeeID  INTEGER     NOT NULL,
+    shopID      INTEGER     NOT NULL,
     salaryHOUR  INTEGER     CHECK (salaryHOUR >= 0)
                             NOT NULL,
     workHOURS   INTEGER     CHECK (salaryHOUR >= 0)
                             NOT NULL,
-    FOREIGN KEY (employeeID)REFERENCES Employee(employeeID)
+    FOREIGN KEY (employeeID)REFERENCES Employee(employeeID),
+    FOREIGN KEY (shopID)    REFERENCES Employee(shopID)
+    PRIMARY KEY (employeeID, shopID)
 );
 
 DROP TABLE IF EXISTS Stock;
@@ -226,60 +225,60 @@ INSERT INTO Bookshop (name, address, shopTYPE, manager) VALUES
     ('The Book Hive', '202 Reader Rd, Novelton', 'franchise', 'Emma White');
 
 -- Insert Employee
-INSERT INTO Employee (name, shopID) VALUES 
-    ('Megan Clark', (SELECT shopID FROM Bookshop WHERE name = 'The Reading Nook')),
-    ('Lucas Taylor', (SELECT shopID FROM Bookshop WHERE name = 'The Reading Nook')),
-    ('Sophia Brown', (SELECT shopID FROM Bookshop WHERE name = 'The Reading Nook')),
-    ('James Davis', (SELECT shopID FROM Bookshop WHERE name = 'The Reading Nook')),
-    ('Lily Evans', (SELECT shopID FROM Bookshop WHERE name = 'The Reading Nook')),
-    ('Ben Harris', (SELECT shopID FROM Bookshop WHERE name = 'Novel Ideas')),
-    ('Olivia White', (SELECT shopID FROM Bookshop WHERE name = 'Novel Ideas')),
-    ('Ella Thomas', (SELECT shopID FROM Bookshop WHERE name = 'Novel Ideas')),
-    ('Jack Wilson', (SELECT shopID FROM Bookshop WHERE name = 'Novel Ideas')),
-    ('David Lee', (SELECT shopID FROM Bookshop WHERE name = 'Novel Ideas')),
-    ('Charlie Scott', (SELECT shopID FROM Bookshop WHERE name = 'Page Turner Books')),
-    ('Ava Adams', (SELECT shopID FROM Bookshop WHERE name = 'Page Turner Books')),
-    ('Isabella Parker', (SELECT shopID FROM Bookshop WHERE name = 'Page Turner Books')),
-    ('Mason Harris', (SELECT shopID FROM Bookshop WHERE name = 'Page Turner Books')),
-    ('Amelia Walker', (SELECT shopID FROM Bookshop WHERE name = 'Page Turner Books')),
-    ('Henry Young', (SELECT shopID FROM Bookshop WHERE name = 'Book Haven')),
-    ('Grace King', (SELECT shopID FROM Bookshop WHERE name = 'Book Haven')),
-    ('Ethan Green', (SELECT shopID FROM Bookshop WHERE name = 'Book Haven')),
-    ('Mila Carter', (SELECT shopID FROM Bookshop WHERE name = 'Book Haven')),
-    ('Sebastian Allen', (SELECT shopID FROM Bookshop WHERE name = 'Book Haven')),
-    ('Aiden Robinson', (SELECT shopID FROM Bookshop WHERE name = 'The Book Hive')),
-    ('Harper Lewis', (SELECT shopID FROM Bookshop WHERE name = 'The Book Hive')),
-    ('Madeline Hall', (SELECT shopID FROM Bookshop WHERE name = 'The Book Hive')),
-    ('Jacob Nelson', (SELECT shopID FROM Bookshop WHERE name = 'The Book Hive')),
-    ('Chloe Martinez', (SELECT shopID FROM Bookshop WHERE name = 'The Book Hive'));
-
+INSERT INTO Employee (name) VALUES 
+    ('Megan Clark'),
+    ('Lucas Taylor'),
+    ('Sophia Brown'),
+    ('James Davis'),
+    ('Lily Evans'),
+    ('Ben Harris'),
+    ('Olivia White'),
+    ('Ella Thomas'),
+    ('Jack Wilson'),
+    ('David Lee'),
+    ('Charlie Scott'),
+    ('Ava Adams'),
+    ('Isabella Parker'),
+    ('Mason Harris'),
+    ('Amelia Walker'),
+    ('Henry Young'),
+    ('Grace King'),
+    ('Ethan Green'),
+    ('Mila Carter'),
+    ('Sebastian Allen'),
+    ('Aiden Robinson'),
+    ('Harper Lewis'),
+    ('Madeline Hall'),
+    ('Jacob Nelson'),
+    ('Chloe Martinez');
+    
 -- Insert Contract Data for Each Employee
-INSERT INTO Contract (employeeID, salaryHOUR, workHOURS) VALUES
-    (1, 15, 40),
-    (2, 14, 35),
-    (3, 16, 40),
-    (4, 18, 30),
-    (5, 17, 25),
-    (6, 20, 40),
-    (7, 22, 38),
-    (8, 19, 40),
-    (9, 21, 35),
-    (10, 23, 30),
-    (11, 17, 40),
-    (12, 15, 35),
-    (13, 16, 40),
-    (14, 18, 30),
-    (15, 19, 25),
-    (16, 14, 40),
-    (17, 20, 40),
-    (18, 21, 38),
-    (19, 22, 40),
-    (20, 23, 35),
-    (21, 18, 40),
-    (22, 17, 35),
-    (23, 19, 40),
-    (24, 20, 30),
-    (25, 22, 38);
+INSERT INTO Contract (employeeID, shopID, salaryHOUR, workHOURS) VALUES
+    (1, 1, 15, 40),
+    (2, 1, 14, 35),
+    (3, 1, 16, 40),
+    (4, 1, 18, 30),
+    (5, 1, 17, 25),
+    (6, 2, 20, 40),
+    (7, 2, 22, 38),
+    (8, 2, 19, 40),
+    (9, 2, 21, 35),
+    (10, 2, 23, 30),
+    (11, 3, 17, 40),
+    (12, 3, 15, 35),
+    (13, 3, 16, 40),
+    (14, 3, 18, 30),
+    (15, 3, 19, 25),
+    (16, 4, 14, 40),
+    (17, 4, 20, 40),
+    (18, 4, 21, 38),
+    (19, 4, 22, 40),
+    (20, 4, 23, 35),
+    (21, 5, 18, 40),
+    (22, 5, 17, 35),
+    (23, 5, 19, 40),
+    (24, 5, 20, 30),
+    (25, 5, 22, 38);
 
 -- Insert Stock Data for Bookshops and Books
 INSERT INTO Stock (shopID, isbn, stock) VALUES
