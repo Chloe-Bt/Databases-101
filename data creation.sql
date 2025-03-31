@@ -66,6 +66,7 @@ CREATE TABLE Contract(
                             NOT NULL,
     workHOURS   INTEGER     CHECK (salaryHOUR >= 0)
                             NOT NULL,
+    function    TEXT        CHECK (function IN ('manager', 'shop assistant') OR shopTYPE IS NULL),
     FOREIGN KEY (employeeID)REFERENCES Employee(employeeID),
     FOREIGN KEY (shopID)    REFERENCES Employee(shopID)
     PRIMARY KEY (employeeID, shopID)
