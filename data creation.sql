@@ -27,9 +27,7 @@ CREATE TABLE BookAuthor(
 
 DROP TABLE IF EXISTS Genre;
 CREATE TABLE Genre(
-    genreID     INTEGER     PRIMARY KEY 
-                            AUTOINCREMENT,
-    name        TEXT        UNIQUE
+    name        TEXT        PRIMARY KEY
                             NOT NULL
 );
 
@@ -66,9 +64,9 @@ CREATE TABLE Contract(
                             NOT NULL,
     workHOURS   INTEGER     CHECK (salaryHOUR >= 0)
                             NOT NULL,
-    function    TEXT        CHECK (function IN ('manager', 'shop assistant') OR shopTYPE IS NULL),
+    function    TEXT        CHECK (function IN ('manager', 'shop assistant') OR function IS NULL),
     FOREIGN KEY (employeeID)REFERENCES Employee(employeeID),
-    FOREIGN KEY (shopID)    REFERENCES Employee(shopID)
+    FOREIGN KEY (shopID)    REFERENCES Employee(shopID),
     PRIMARY KEY (employeeID, shopID)
 );
 
@@ -81,6 +79,17 @@ CREATE TABLE Stock(
     FOREIGN KEY (shopID)    REFERENCES Bookshop(shopID),
     FOREIGN KEY (isbn)      REFERENCES Book(isbn),
     PRIMARY KEY (shopID, isbn)
+);
+
+-- self-join example
+DROP TABLE IF EXISTS Family;
+CREATE TABLE Family(
+    name1       TEXT        NOT NULL,
+    name2       TEXT        NOT NULL,
+    role        TEXT        CHECK (role IN ('partner', 'parent') OR role IS NULL),
+    FOREIGN KEY (name1)     REFERENCES Author(name)
+                            ON DELETE CASCADE,
+    PRIMARY KEY (name1, name2)
 );
 
 
@@ -190,32 +199,32 @@ INSERT INTO BookAuthor (isbn, authorID) VALUES
 
 -- Insert Book-Genre Relationships
 INSERT INTO BookGenre (isbn, genreID) VALUES 
-    ('9780544003415', (SELECT genreID FROM Genre WHERE name='Fantasy')),
-    ('9780747532743', (SELECT genreID FROM Genre WHERE name='Fantasy')),
-    ('9780451524935', (SELECT genreID FROM Genre WHERE name='Dystopian')),
-    ('9780553293357', (SELECT genreID FROM Genre WHERE name='Science Fiction')),
-    ('9780547572290', (SELECT genreID FROM Genre WHERE name='Science Fiction')),
-    ('9780345339683', (SELECT genreID FROM Genre WHERE name='Science Fiction')),
-    ('9780743273565', (SELECT genreID FROM Genre WHERE name='Dystopian')),
-    ('9780451532084', (SELECT genreID FROM Genre WHERE name='Horror')),
-    ('9781509827731', (SELECT genreID FROM Genre WHERE name='Horror')),
-    ('9780380977277', (SELECT genreID FROM Genre WHERE name='Fantasy')),
-    ('9780060853983', (SELECT genreID FROM Genre WHERE name='Fantasy')),
-    ('9780060853983', (SELECT genreID FROM Genre WHERE name='Science Fiction')),
-    ('9780060256654', (SELECT genreID FROM Genre WHERE name='Fantasy')),
-    ('9780439023528', (SELECT genreID FROM Genre WHERE name='Dystopian')),
-    ('9780441172719', (SELECT genreID FROM Genre WHERE name='Fantasy')),
-    ('9780765311788', (SELECT genreID FROM Genre WHERE name='Science Fiction')),
-    ('9780007117116', (SELECT genreID FROM Genre WHERE name='Fantasy')),
-    ('9780451526341', (SELECT genreID FROM Genre WHERE name='Dystopian')),
-    ('9780060935467', (SELECT genreID FROM Genre WHERE name='Classic')),
-    ('9780199535569', (SELECT genreID FROM Genre WHERE name='Classic')),
-    ('9780140449136', (SELECT genreID FROM Genre WHERE name='Classic')),
-    ('9780451530577', (SELECT genreID FROM Genre WHERE name='Detective')),
-    ('9780061120084', (SELECT genreID FROM Genre WHERE name='Horror')),
-    ('9780451205766', (SELECT genreID FROM Genre WHERE name='Horror')),
-    ('9780141439600', (SELECT genreID FROM Genre WHERE name='Horror')),
-    ('9780553382563', (SELECT genreID FROM Genre WHERE name='Horror'));
+    ('9780544003415', 'Fantasy'),
+    ('9780747532743', 'Fantasy'),
+    ('9780451524935', 'Dystopian'),
+    ('9780553293357', 'Science Fiction'),
+    ('9780547572290', 'Science Fiction'),
+    ('9780345339683', 'Science Fiction'),
+    ('9780743273565', 'Dystopian'),
+    ('9780451532084', 'Horror'),
+    ('9781509827731', 'Horror'),
+    ('9780380977277', 'Fantasy'),
+    ('9780060853983', 'Fantasy'),
+    ('9780060853983', 'Science Fiction'),
+    ('9780060256654', 'Fantasy'),
+    ('9780439023528', 'Dystopian'),
+    ('9780441172719', 'Fantasy'),
+    ('9780765311788', 'Science Fiction'),
+    ('9780007117116', 'Fantasy'),
+    ('9780451526341', 'Dystopian'),
+    ('9780060935467', 'Classic'),
+    ('9780199535569', 'Classic'),
+    ('9780140449136', 'Classic'),
+    ('9780451530577', 'Detective'),
+    ('9780061120084', 'Horror'),
+    ('9780451205766', 'Horror'),
+    ('9780141439600', 'Horror'),
+    ('9780553382563', 'Horror');
 
 -- Insert Bookshop
 INSERT INTO Bookshop (name, address, shopTYPE, manager) VALUES 
