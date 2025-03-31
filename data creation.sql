@@ -87,7 +87,7 @@ CREATE TABLE Stock(
 -- Fill tables with information
 -- Filling the tables was done by politely asking chatgpt for a wide
 -- variety of information for the specific tables we wrote above.
--- Insert Books
+-- Insert Book
 INSERT INTO Book (isbn, title, language, publisher) VALUES
     ('9780544003415', 'The Hobbit', 'English', 'Allen & Unwin'),
     ('9780747532743', 'Harry Potter and the Philosopher''s Stone', 'English', 'Bloomsbury'),
@@ -115,7 +115,7 @@ INSERT INTO Book (isbn, title, language, publisher) VALUES
     ('9780141439600', 'Strange Case of Dr Jekyll and Mr Hyde', 'English', 'Longmans, Green & Co.'),
     ('9780553382563', 'The Call of Cthulhu and Other Weird Stories', 'English', 'Arkham House');
 
--- Insert Authors
+-- Insert Author
 INSERT INTO Author (name) VALUES
     ('J.R.R. Tolkien'),
     ('J.K. Rowling'),
@@ -145,7 +145,7 @@ INSERT INTO Author (name) VALUES
     ('Fyodor Dostoevsky'),
     ('Mark Twain');
 
--- Insert Genres
+-- Insert Genre
 INSERT INTO Genre (name) VALUES
     ('Fantasy'),
     ('Science Fiction'),
