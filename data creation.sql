@@ -82,14 +82,14 @@ CREATE TABLE Stock(
 );
 
 -- self-join example
-DROP TABLE IF EXISTS Family;
-CREATE TABLE Family(
-    name1       TEXT        NOT NULL,
-    name2       TEXT        NOT NULL,
-    role        TEXT        CHECK (role IN ('partner', 'parent') OR role IS NULL),
-    FOREIGN KEY (name1)     REFERENCES Author(name)
+DROP TABLE IF EXISTS AuthorFamily;
+CREATE TABLE AuthorFamily(
+    author      TEXT        NOT NULL,
+    name        TEXT        NOT NULL,
+    role        TEXT        CHECK (role IN ('partner', 'parent', 'child') OR role IS NULL),
+    FOREIGN KEY (author)    REFERENCES Author(name)
                             ON DELETE CASCADE,
-    PRIMARY KEY (name1, name2)
+    PRIMARY KEY (author, name)
 );
 
 
@@ -317,3 +317,7 @@ INSERT INTO Stock (shopID, isbn, stock) VALUES
     (5, '9780451205766', 9),
     (5, '9780141439600', 18),
     (5, '9780553382563', 13);
+
+INSERT INTO AuthorFamily (author, name, role) VALUES
+    ('', '', 'partner')
+    ;
