@@ -72,13 +72,13 @@ CREATE TABLE Contract(
 
 DROP TABLE IF EXISTS Stocks;
 CREATE TABLE Stocks(
-    shopID      INTEGER,
+    address     INTEGER,
     isbn        CHAR(13),
     stock       INTEGER     CHECK (stock >= 0)
                             NOT NULL,
-    FOREIGN KEY (shopID)    REFERENCES Bookshop(shopID),
+    FOREIGN KEY (address)   REFERENCES Bookshop(address),
     FOREIGN KEY (isbn)      REFERENCES Book(isbn),
-    PRIMARY KEY (shopID, isbn)
+    PRIMARY KEY (address, isbn)
 );
 
 -- self-join example
@@ -291,32 +291,32 @@ INSERT INTO Contract (employeeID, shopID, salaryHOUR, workHOURS) VALUES
     (25, 5, 22, 38);
 
 -- Insert Stock Data for Bookshops and Books
-INSERT INTO Stocks (shopID, isbn, stock) VALUES
-    (1, '9780544003415', 15),
-    (1, '9780747532743', 10),
-    (1, '9780451524935', 5),
-    (1, '9780553293357', 8),
-    (1, '9780547572290', 12),
-    (2, '9780345339683', 20),
-    (2, '9780743273565', 9),
-    (2, '9780451532084', 7),
-    (2, '9781509827731', 6),
-    (2, '9780380977277', 11),
-    (3, '9780060853983', 18),
-    (3, '9780060256654', 13),
-    (3, '9780439023528', 25),
-    (3, '9780441172719', 17),
-    (3, '9780765311788', 30),
-    (4, '9780007117116', 22),
-    (4, '9780451526341', 8),
-    (4, '9780060935467', 5),
-    (4, '9780199535569', 10),
-    (4, '9780140449136', 6),
-    (5, '9780451530577', 14),
-    (5, '9780061120084', 16),
-    (5, '9780451205766', 9),
-    (5, '9780141439600', 18),
-    (5, '9780553382563', 13);
+INSERT INTO Stocks (address, isbn, stock) VALUES
+    ('123 Fiction Blvd, Booktown', '9780544003415', 15),
+    ('123 Fiction Blvd, Booktown', '9780747532743', 10),
+    ('123 Fiction Blvd, Booktown', '9780451524935', 5),
+    ('123 Fiction Blvd, Booktown', '9780553293357', 8),
+    ('123 Fiction Blvd, Booktown', '9780547572290', 12),
+    ('456 Page St, Storyville', '9780345339683', 20),
+    ('456 Page St, Storyville', '9780743273565', 9),
+    ('456 Page St, Storyville', '9780451532084', 7),
+    ('456 Page St, Storyville', '9781509827731', 6),
+    ('456 Page St, Storyville', '9780380977277', 11),
+    ('789 Literary Ln, Biblioville', '9780060853983', 18),
+    ('789 Literary Ln, Biblioville', '9780060256654', 13),
+    ('789 Literary Ln, Biblioville', '9780439023528', 25),
+    ('789 Literary Ln, Biblioville', '9780441172719', 17),
+    ('789 Literary Ln, Biblioville', '9780765311788', 30),
+    ('101 Bookworm Ave, Readsburgh', '9780007117116', 22),
+    ('101 Bookworm Ave, Readsburgh', '9780451526341', 8),
+    ('101 Bookworm Ave, Readsburgh', '9780060935467', 5),
+    ('101 Bookworm Ave, Readsburgh', '9780199535569', 10),
+    ('101 Bookworm Ave, Readsburgh', '9780140449136', 6),
+    ('202 Reader Rd, Novelton', '9780451530577', 14),
+    ('202 Reader Rd, Novelton', '9780061120084', 16),
+    ('202 Reader Rd, Novelton', '9780451205766', 9),
+    ('202 Reader Rd, Novelton', '9780141439600', 18),
+    ('202 Reader Rd, Novelton', '9780553382563', 13);
 
 INSERT INTO AuthorFamily (authorID, name, role) VALUES
     ((SELECT authorID FROM Author WHERE name='Frank Herbert'), 'Brian Patrick Herbert', 'child'),
