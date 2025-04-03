@@ -70,8 +70,8 @@ CREATE TABLE Contract(
     PRIMARY KEY (employeeID, shopID)
 );
 
-DROP TABLE IF EXISTS Stock;
-CREATE TABLE Stock(
+DROP TABLE IF EXISTS Stocks;
+CREATE TABLE Stocks(
     shopID      INTEGER,
     isbn        CHAR(13),
     stock       INTEGER     CHECK (stock >= 0)
@@ -84,12 +84,12 @@ CREATE TABLE Stock(
 -- self-join example
 DROP TABLE IF EXISTS AuthorFamily;
 CREATE TABLE AuthorFamily(
-    author      TEXT        NOT NULL,
+    authorID    INTEGER     NOT NULL,
     name        TEXT        NOT NULL,
     role        TEXT        CHECK (role IN ('partner', 'parent', 'child') OR role IS NULL),
-    FOREIGN KEY (author)    REFERENCES Author(name)
+    FOREIGN KEY (authorID)  REFERENCES Author(authorID)
                             ON DELETE CASCADE,
-    PRIMARY KEY (author, name)
+    PRIMARY KEY (authorID, name)
 );
 
 
@@ -170,8 +170,8 @@ INSERT INTO Genre (name) VALUES
 
 -- Insert Book-Author Relationships
 INSERT INTO BookAuthor (isbn, authorID) VALUES 
-    ('9780544003415', (SELECT authorID FROM Author WHERE name='J.R.R. Tolkien')),
-    ('9780747532743', (SELECT authorID FROM Author WHERE name='J.K. Rowling')),
+    ('9780544003415', (SELECT authorID FROM Author WHERE name='John Ronald Reuel Tolkien')),
+    ('9780747532743', (SELECT authorID FROM Author WHERE name='Joanne Rowling Rowling')),
     ('9780451524935', (SELECT authorID FROM Author WHERE name='George Orwell')),
     ('9780553293357', (SELECT authorID FROM Author WHERE name='Isaac Asimov')),
     ('9780547572290', (SELECT authorID FROM Author WHERE name='Frank Herbert')),
@@ -182,11 +182,11 @@ INSERT INTO BookAuthor (isbn, authorID) VALUES
     ('9780380977277', (SELECT authorID FROM Author WHERE name='Neil Gaiman')),
     ('9780060853983', (SELECT authorID FROM Author WHERE name='Terry Pratchett')),
     ('9780060853983', (SELECT authorID FROM Author WHERE name='Neil Gaiman')),
-    ('9780060256654', (SELECT authorID FROM Author WHERE name='C.S. Lewis')),
+    ('9780060256654', (SELECT authorID FROM Author WHERE name='Clive Staples Lewis')),
     ('9780439023528', (SELECT authorID FROM Author WHERE name='Suzanne Collins')),
     ('9780441172719', (SELECT authorID FROM Author WHERE name='Patrick Rothfuss')),
     ('9780765311788', (SELECT authorID FROM Author WHERE name='Brandon Sanderson')),
-    ('9780007117116', (SELECT authorID FROM Author WHERE name='J.R.R. Tolkien')),
+    ('9780007117116', (SELECT authorID FROM Author WHERE name='John Ronald Reuel Tolkien')),
     ('9780451526341', (SELECT authorID FROM Author WHERE name='George Orwell')),
     ('9780060935467', (SELECT authorID FROM Author WHERE name='Harper Lee')),
     ('9780199535569', (SELECT authorID FROM Author WHERE name='Leo Tolstoy')),
@@ -195,7 +195,7 @@ INSERT INTO BookAuthor (isbn, authorID) VALUES
     ('9780061120084', (SELECT authorID FROM Author WHERE name='Stephen King')),
     ('9780451205766', (SELECT authorID FROM Author WHERE name='Stephen King')),
     ('9780141439600', (SELECT authorID FROM Author WHERE name='Robert Louis Stevenson')),
-    ('9780553382563', (SELECT authorID FROM Author WHERE name='H.P. Lovecraft'));
+    ('9780553382563', (SELECT authorID FROM Author WHERE name='Howard Phillips Lovecraft'));
 
 -- Insert Book-Genre Relationships
 INSERT INTO BookGenre (isbn, genreID) VALUES 
@@ -291,7 +291,7 @@ INSERT INTO Contract (employeeID, shopID, salaryHOUR, workHOURS) VALUES
     (25, 5, 22, 38);
 
 -- Insert Stock Data for Bookshops and Books
-INSERT INTO Stock (shopID, isbn, stock) VALUES
+INSERT INTO Stocks (shopID, isbn, stock) VALUES
     (1, '9780544003415', 15),
     (1, '9780747532743', 10),
     (1, '9780451524935', 5),
@@ -318,6 +318,9 @@ INSERT INTO Stock (shopID, isbn, stock) VALUES
     (5, '9780141439600', 18),
     (5, '9780553382563', 13);
 
-INSERT INTO AuthorFamily (author, name, role) VALUES
-    ('', '', 'partner')
-    ;
+INSERT INTO AuthorFamily (authorID, name, role) VALUES
+    ((SELECT authorID FROM Author WHERE name='Frank Herbert'), 'Brian Patrick Herbert', 'child'),
+    ((SELECT authorID FROM Author WHERE name='Joanne Rowling Rowling'), 'Neil Murray', 'partner'),
+    ((SELECT authorID FROM Author WHERE name='Howard Phillips Lovecraft'), 'Sonia Haft Greene Lovecraft Davis', 'partner'),
+    ((SELECT authorID FROM Author WHERE name='Frank Herbert'), 'Theresa Diane Shackelford', 'partner'),
+    ((SELECT authorID FROM Author WHERE name='George Orwell'), 'Richard Blair', 'child');
