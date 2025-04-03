@@ -59,15 +59,15 @@ CREATE TABLE Employee(
 DROP TABLE IF EXISTS Contract;
 CREATE TABLE Contract(
     employeeID  INTEGER     NOT NULL,
-    shopID      INTEGER     NOT NULL,
+    address     INTEGER     NOT NULL,
     salaryHOUR  INTEGER     CHECK (salaryHOUR >= 0)
                             NOT NULL,
     workHOURS   INTEGER     CHECK (salaryHOUR >= 0)
                             NOT NULL,
     function    TEXT        CHECK (function IN ('manager', 'shop assistant') OR function IS NULL),
     FOREIGN KEY (employeeID)REFERENCES Employee(employeeID),
-    FOREIGN KEY (shopID)    REFERENCES Employee(shopID),
-    PRIMARY KEY (employeeID, shopID)
+    FOREIGN KEY (address)   REFERENCES Employee(address),
+    PRIMARY KEY (employeeID, address)
 );
 
 DROP TABLE IF EXISTS Stocks;
@@ -169,6 +169,9 @@ INSERT INTO Genre (name) VALUES
     ('Steampunk');
 
 -- Insert Book-Author Relationships
+-- The select statement was used for a more natural way of adding an author then just their ID.
+-- But in essence it is just the authorID being used.
+-- The seperate BookAuthor table was used for allowing multipel authors for the same book. 
 INSERT INTO BookAuthor (isbn, authorID) VALUES 
     ('9780544003415', (SELECT authorID FROM Author WHERE name='John Ronald Reuel Tolkien')),
     ('9780747532743', (SELECT authorID FROM Author WHERE name='Joanne Rowling Rowling')),
@@ -228,11 +231,11 @@ INSERT INTO BookGenre (isbn, genreID) VALUES
 
 -- Insert Bookshop
 INSERT INTO Bookshop (name, address, shopTYPE, manager) VALUES 
-    ('The Reading Nook', '123 Fiction Blvd, Booktown', 'franchise', 'Alice Johnson'),
-    ('Novel Ideas', '456 Page St, Storyville', 'chain', 'Mark Roberts'),
-    ('Page Turner Books', '789 Literary Ln, Biblioville', 'franchise', 'Rachel Green'),
-    ('Book Haven', '101 Bookworm Ave, Readsburgh', 'chain', 'John Smith'),
-    ('The Book Hive', '202 Reader Rd, Novelton', 'franchise', 'Emma White');
+    ('The Reading Nook', '123 Fiction Blvd, Booktown', 'franchise', 'Sophia Brown'),
+    ('Novel Ideas', '456 Page St, Storyville', 'chain', 'Charlie Scott'),
+    ('Page Turner Books', '789 Literary Ln, Biblioville', 'franchise', 'Ella Thomas'),
+    ('Book Haven', '101 Bookworm Ave, Readsburgh', 'chain', 'Isabella Parker'),
+    ('The Book Hive', '202 Reader Rd, Novelton', 'franchise', 'Jacob Nelson');
 
 -- Insert Employee
 INSERT INTO Employee (name) VALUES 
@@ -263,32 +266,32 @@ INSERT INTO Employee (name) VALUES
     ('Chloe Martinez');
     
 -- Insert Contract Data for Each Employee
-INSERT INTO Contract (employeeID, shopID, salaryHOUR, workHOURS) VALUES
-    (1, 1, 15, 40),
-    (2, 1, 14, 35),
-    (3, 1, 16, 40),
-    (4, 1, 18, 30),
-    (5, 1, 17, 25),
-    (6, 2, 20, 40),
-    (7, 2, 22, 38),
-    (8, 2, 19, 40),
-    (9, 2, 21, 35),
-    (10, 2, 23, 30),
-    (11, 3, 17, 40),
-    (12, 3, 15, 35),
-    (13, 3, 16, 40),
-    (14, 3, 18, 30),
-    (15, 3, 19, 25),
-    (16, 4, 14, 40),
-    (17, 4, 20, 40),
-    (18, 4, 21, 38),
-    (19, 4, 22, 40),
-    (20, 4, 23, 35),
-    (21, 5, 18, 40),
-    (22, 5, 17, 35),
-    (23, 5, 19, 40),
-    (24, 5, 20, 30),
-    (25, 5, 22, 38);
+INSERT INTO Contract (employeeID, address, salaryHOUR, workHOURS, function) VALUES
+    (1, '123 Fiction Blvd, Booktown', 15, 40, 'shop assistant'),
+    (2, '123 Fiction Blvd, Booktown', 14, 35, 'shop assistant'),
+    (3, '123 Fiction Blvd, Booktown', 16, 40, 'manager'),
+    (4, '123 Fiction Blvd, Booktown', 18, 30, 'shop assistant'),
+    (5, '123 Fiction Blvd, Booktown', 17, 25, 'shop assistant'),
+    (6, '456 Page St, Storyville', 20, 40, 'shop assistant'),
+    (7, '456 Page St, Storyville', 22, 38, 'shop assistant'),
+    (8, '456 Page St, Storyville', 19, 40, 'manager'),
+    (9, '456 Page St, Storyville', 21, 35, 'shop assistant'),
+    (10, '456 Page St, Storyville', 23, 30, 'shop assistant'),
+    (11, '789 Literary Ln, Biblioville', 17, 40, 'manager'),
+    (12, '789 Literary Ln, Biblioville', 15, 35, 'shop assistant'),
+    (13, '789 Literary Ln, Biblioville', 16, 40, 'manager'),
+    (14, '789 Literary Ln, Biblioville', 18, 30, 'shop assistant'),
+    (15, '789 Literary Ln, Biblioville', 19, 25, 'shop assistant'),
+    (16, '101 Bookworm Ave, Readsburgh', 14, 40, 'shop assistant'),
+    (17, '101 Bookworm Ave, Readsburgh', 20, 40, 'shop assistant'),
+    (18, '101 Bookworm Ave, Readsburgh', 21, 38, 'shop assistant'),
+    (19, '101 Bookworm Ave, Readsburgh', 22, 40, 'shop assistant'),
+    (20, '101 Bookworm Ave, Readsburgh', 23, 35, 'shop assistant'),
+    (21, '202 Reader Rd, Novelton', 18, 40, 'shop assistant'),
+    (22, '202 Reader Rd, Novelton', 17, 35, 'shop assistant'),
+    (23, '202 Reader Rd, Novelton', 19, 40, 'shop assistant'),
+    (24, '202 Reader Rd, Novelton', 20, 30, 'manager'),
+    (25, '202 Reader Rd, Novelton', 22, 38, 'shop assistant');    
 
 -- Insert Stock Data for Bookshops and Books
 INSERT INTO Stocks (address, isbn, stock) VALUES
