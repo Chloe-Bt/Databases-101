@@ -6,8 +6,7 @@ SELECT BS.name, BS.address, B.title, S.stock FROM Bookshop BS
     WHERE B.title = 'The Hobbit'
     GROUP BY BS.address HAVING stock > 5;
 
--- Set operation (UNION, INTERSECT, EXCEPT)
--- Compute the names of the employees who have a manager function.
+-- Set operation: Compute the names of the employees who have a manager function.
 SELECT '<query 2>';
 SELECT E.name FROM Employee E
     WHERE employeeID IN (SELECT employeeID 
@@ -17,7 +16,7 @@ SELECT E.name FROM Employee E
             WHERE function = 'manager');
 
 
--- Nested query: books with the same genre as 'Good Omens'?
+-- Nested query: Which books have the same genre as 'Good Omens'?
 SELECT '<query 3>';
 SELECT B.title FROM Book B 
 	JOIN BookGenre BG ON B.isbn = BG.isbn
@@ -28,8 +27,7 @@ SELECT B.title FROM Book B
                  	WHERE B.title = 'Good Omens')
     );
 
--- Aggregation (MAX, AVG, SUM, COUNT)
--- 
+-- Aggregation: Find the titles and authors of the books with more than one author.
 SELECT '<query 4>';
 SELECT B.title, A.name FROM Author A, Book B, BookAuthor BA
     WHERE B.isbn = BA.isbn
@@ -48,8 +46,7 @@ SELECT E.employeeID, E.name FROM Employee E
     WHERE C.address LIKE '%Booktown';
 
 
--- LIKE (string matching)
--- Compute the title of every book beginning with "The".
+-- LIKE (string matching): Compute the title of every book beginning with "The".
 SELECT '<query 6>';
 SELECT B.title
     FROM Book B

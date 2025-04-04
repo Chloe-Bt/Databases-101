@@ -8,6 +8,17 @@ CREATE TABLE Book(
     PRIMARY KEY (isbn)
 );
 
+drop table if exists Edition;
+CREATE TABLE Edition (
+    ISBN 		CHAR(13),
+    EditionNr 	INTEGER 	NOT NULL, 
+    Published	INTEGER,
+    Pages 		INTEGER,
+    PRIMARY KEY (ISBN, EditionNr), 
+    FOREIGN KEY (ISBN) 		REFERENCES Book(ISBN) 
+  							ON DELETE CASCADE
+);
+
 DROP TABLE IF EXISTS Author;
 CREATE TABLE Author(
     authorID    INTEGER     PRIMARY KEY
@@ -65,6 +76,7 @@ CREATE TABLE Contract(
     workHOURS   INTEGER     CHECK (salaryHOUR >= 0)
                             NOT NULL,
     function    TEXT        CHECK (function IN ('manager', 'shop assistant') OR function IS NULL),
+    extraInfo	integer,
     FOREIGN KEY (employeeID)REFERENCES Employee(employeeID),
     FOREIGN KEY (address)   REFERENCES Employee(address),
     PRIMARY KEY (employeeID, address)
@@ -92,11 +104,40 @@ CREATE TABLE AuthorFamily(
     PRIMARY KEY (authorID, name)
 );
 
+drop table if exists Managers;
+create table Managers(
+	employeeID 	integer 	NOT NULL, 
+    mngLevel	integer, 
+    foreign key (employeeID) references Employee(employeeid)
+    primary key (employeeid)
+);
 
+drop table if exists ShopAssistants;
+create table ShopAssistants(
+	employeeID	integer		not NULL, 
+    yrsExp 		integer, 
+    foreign key (employeeid) REFERENCES Employee(employeeid)
+    primary key (employeeid)
+);
+
+drop trigger if exists addManager;
+create trigger addManager after insert on Contract
+	when NEW.function = 'manager'
+    begin 
+    	insert into Managers (employeeID, mngLevel) values (NEW.employeeID, NEW.extraInfo);
+    END;
+
+drop trigger if exists addAssistant;
+create trigger addAssistant after insert on Contract
+	when NEW.function = 'shop assistant'
+    begin 
+    	insert into ShopAssistants (employeeID, yrsExp) values (NEW.employeeID, NEW.extraInfo);
+    END;
 
 -- Fill tables with information
 -- Filling the tables was done by politely asking chatgpt for a wide
 -- variety of information for the specific tables we wrote above.
+
 -- Insert Book
 INSERT INTO Book (isbn, title, language, publisher) VALUES
     ('9780544003415', 'The Hobbit', 'English', 'Allen & Unwin'),
@@ -124,6 +165,34 @@ INSERT INTO Book (isbn, title, language, publisher) VALUES
     ('9780451205766', 'The Shining', 'English', 'Doubleday'),
     ('9780141439600', 'Strange Case of Dr Jekyll and Mr Hyde', 'English', 'Longmans, Green & Co.'),
     ('9780553382563', 'The Call of Cthulhu and Other Weird Stories', 'English', 'Arkham House');
+
+-- insert Edition
+INSERT INTO Edition (ISBN, EditionNr, Published, Pages) VALUES
+    ('9780544003415', 1, 1937, 310),
+    ('9780544003415', 2, 1951, 320), 
+    ('9780747532743', 1, 1997, 223), 
+    ('9780747532743', 2, 1998, 250), 
+    ('9780451524935', 1, 1949, 328), 
+    ('9780451524935', 2, 1983, 352), 
+    ('9780553293357', 1, 1951, 255), 
+    ('9780553293357', 2, 2008, 296), 
+    ('9780547572290', 1, 1965, 412), 
+    ('9780547572290', 2, 1984, 517),
+    ('9780345339683', 1, 1979, 216), 
+    ('9780345339683', 2, 2005, 240), 
+    ('9780743273565', 1, 1953, 249), 
+    ('9780743273565', 2, 2013, 256), 
+    ('9780451532084', 1, 1897, 418), 
+    ('9780451532084', 2, 2011, 480), 
+    ('9781509827731', 1, 1818, 280), 
+    ('9781509827731', 2, 1831, 320), 
+    ('9780380977277', 1, 2001, 465), 
+    ('9780380977277', 2, 2011, 635), 
+    ('9780060853983', 1, 1990, 412), 
+    ('9780060853983', 2, 2019, 432), 
+    ('9780765311788', 1, 2006, 541), 
+    ('9780765311788', 2, 2014, 643); 
+
 
 -- Insert Author
 INSERT INTO Author (name) VALUES
@@ -266,32 +335,32 @@ INSERT INTO Employee (name) VALUES
     ('Chloe Martinez');
     
 -- Insert Contract Data for Each Employee
-INSERT INTO Contract (employeeID, address, salaryHOUR, workHOURS, function) VALUES
-    (1, '123 Fiction Blvd, Booktown', 15, 40, 'shop assistant'),
-    (2, '123 Fiction Blvd, Booktown', 14, 35, 'shop assistant'),
-    (3, '123 Fiction Blvd, Booktown', 16, 40, 'manager'),
-    (4, '123 Fiction Blvd, Booktown', 18, 30, 'shop assistant'),
-    (5, '123 Fiction Blvd, Booktown', 17, 25, 'shop assistant'),
-    (6, '456 Page St, Storyville', 20, 40, 'shop assistant'),
-    (7, '456 Page St, Storyville', 22, 38, 'shop assistant'),
-    (8, '456 Page St, Storyville', 19, 40, 'manager'),
-    (9, '456 Page St, Storyville', 21, 35, 'shop assistant'),
-    (10, '456 Page St, Storyville', 23, 30, 'shop assistant'),
-    (11, '789 Literary Ln, Biblioville', 17, 40, 'manager'),
-    (12, '789 Literary Ln, Biblioville', 15, 35, 'shop assistant'),
-    (13, '789 Literary Ln, Biblioville', 16, 40, 'manager'),
-    (14, '789 Literary Ln, Biblioville', 18, 30, 'shop assistant'),
-    (15, '789 Literary Ln, Biblioville', 19, 25, 'shop assistant'),
-    (16, '101 Bookworm Ave, Readsburgh', 14, 40, 'shop assistant'),
-    (17, '101 Bookworm Ave, Readsburgh', 20, 40, 'shop assistant'),
-    (18, '101 Bookworm Ave, Readsburgh', 21, 38, 'shop assistant'),
-    (19, '101 Bookworm Ave, Readsburgh', 22, 40, 'shop assistant'),
-    (20, '101 Bookworm Ave, Readsburgh', 23, 35, 'shop assistant'),
-    (21, '202 Reader Rd, Novelton', 18, 40, 'shop assistant'),
-    (22, '202 Reader Rd, Novelton', 17, 35, 'shop assistant'),
-    (23, '202 Reader Rd, Novelton', 19, 40, 'shop assistant'),
-    (24, '202 Reader Rd, Novelton', 20, 30, 'manager'),
-    (25, '202 Reader Rd, Novelton', 22, 38, 'shop assistant');    
+INSERT INTO Contract (employeeID, address, salaryHOUR, workHOURS, function, extraInfo) VALUES
+    (1, '123 Fiction Blvd, Booktown', 15, 40, 'shop assistant', 3),
+    (2, '123 Fiction Blvd, Booktown', 14, 35, 'shop assistant', 1),
+    (3, '123 Fiction Blvd, Booktown', 16, 40, 'manager', 5),
+    (4, '123 Fiction Blvd, Booktown', 18, 30, 'shop assistant', 7),
+    (5, '123 Fiction Blvd, Booktown', 17, 25, 'shop assistant', 9),
+    (6, '456 Page St, Storyville', 20, 40, 'shop assistant', 12),
+    (7, '456 Page St, Storyville', 22, 38, 'shop assistant', 3),
+    (8, '456 Page St, Storyville', 19, 40, 'manager', 6),
+    (9, '456 Page St, Storyville', 21, 35, 'shop assistant', 20),
+    (10, '456 Page St, Storyville', 23, 30, 'shop assistant', 17),
+    (11, '789 Literary Ln, Biblioville', 17, 40, 'manager', 4),
+    (12, '789 Literary Ln, Biblioville', 15, 35, 'shop assistant', 0),
+    (13, '789 Literary Ln, Biblioville', 16, 40, 'manager', 7),
+    (14, '789 Literary Ln, Biblioville', 18, 30, 'shop assistant', 6),
+    (15, '789 Literary Ln, Biblioville', 19, 25, 'shop assistant', 8),
+    (16, '101 Bookworm Ave, Readsburgh', 14, 40, 'shop assistant', 2),
+    (17, '101 Bookworm Ave, Readsburgh', 20, 40, 'shop assistant', 1),
+    (18, '101 Bookworm Ave, Readsburgh', 21, 38, 'shop assistant', 2),
+    (19, '101 Bookworm Ave, Readsburgh', 22, 40, 'shop assistant', 2),
+    (20, '101 Bookworm Ave, Readsburgh', 23, 35, 'shop assistant', 2),
+    (21, '202 Reader Rd, Novelton', 18, 40, 'shop assistant', 3),
+    (22, '202 Reader Rd, Novelton', 17, 35, 'shop assistant', 6),
+    (23, '202 Reader Rd, Novelton', 19, 40, 'shop assistant', 6),
+    (24, '202 Reader Rd, Novelton', 20, 30, 'manager', 8),
+    (25, '202 Reader Rd, Novelton', 22, 38, 'shop assistant', 10);    
 
 -- Insert Stock Data for Bookshops and Books
 INSERT INTO Stocks (address, isbn, stock) VALUES
