@@ -38,7 +38,7 @@ CREATE TABLE BookAuthor(
 
 DROP TABLE IF EXISTS Genre;
 CREATE TABLE Genre(
-    name        TEXT        PRIMARY KEY
+    genreName        TEXT        PRIMARY KEY
                             NOT NULL
 );
 
@@ -47,7 +47,7 @@ CREATE TABLE BookGenre(
     isbn        CHAR(13),
     genreID     INTEGER,
     FOREIGN KEY (isbn)      REFERENCES Book(isbn),
-    FOREIGN KEY (genreID)   REFERENCES Genre(genreID),
+    FOREIGN KEY (genreName)   REFERENCES Genre(genreName),
     PRIMARY KEY (isbn, genreID)
 );
 
@@ -225,7 +225,7 @@ INSERT INTO Author (name) VALUES
     ('Mark Twain');
 
 -- Insert Genre
-INSERT INTO Genre (name) VALUES
+INSERT INTO Genre (genreName) VALUES
     ('Fantasy'),
     ('Science Fiction'),
     ('Dystopian'),
