@@ -73,12 +73,12 @@ CREATE TABLE Contract(
     address     INTEGER     NOT NULL,
     salaryHOUR  INTEGER     CHECK (salaryHOUR >= 0)
                             NOT NULL,
-    workHOURS   INTEGER     CHECK (salaryHOUR >= 0)
+    workHOURS   INTEGER     CHECK (workHOURs >= 0)
                             NOT NULL,
     function    TEXT        CHECK (function IN ('manager', 'shop assistant') OR function IS NULL),
     extraInfo	integer,
     FOREIGN KEY (employeeID)REFERENCES Employee(employeeID),
-    FOREIGN KEY (address)   REFERENCES Employee(address),
+    FOREIGN KEY (address)   REFERENCES Bookshop(address),
     PRIMARY KEY (employeeID, address)
 );
 
@@ -108,7 +108,7 @@ drop table if exists Managers;
 create table Managers(
 	employeeID 	integer 	NOT NULL, 
     mngLevel	integer, 
-    foreign key (employeeID) references Employee(employeeid)
+    foreign key (employeeID) references Employee(employeeid) on delete cascade,
     primary key (employeeid)
 );
 
@@ -116,7 +116,7 @@ drop table if exists ShopAssistants;
 create table ShopAssistants(
 	employeeID	integer		not NULL, 
     yrsExp 		integer, 
-    foreign key (employeeid) REFERENCES Employee(employeeid)
+    foreign key (employeeid) REFERENCES Employee(employeeid) on delete cascade,
     primary key (employeeid)
 );
 
